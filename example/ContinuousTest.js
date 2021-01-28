@@ -24,8 +24,11 @@
 planck.testbed('ContinuousTest', function(testbed) {
   var pl = planck, Vec2 = pl.Vec2;
   var world = pl.World(Vec2(0, -10));
-  
-  var stats = pl.internal.stats;
+
+  var stats = {
+    gjk: pl.internal.Distance,
+    toi: pl.internal.TimeOfImpact,
+  };
 
   var bullet;
   var angularVelocity;
@@ -60,16 +63,16 @@ planck.testbed('ContinuousTest', function(testbed) {
   }
 
   function Launch() {
-    stats.gjkCalls = 0;
-    stats.gjkIters = 0;
-    stats.gjkMaxIters = 0;
+    stats.gjk.gjkCalls = 0;
+    stats.gjk.gjkIters = 0;
+    stats.gjk.gjkMaxIters = 0;
 
-    stats.toiCalls = 0;
-    stats.toiIters = 0;
-    stats.toiRootIters = 0;
-    stats.toiMaxRootIters = 0;
-    stats.toiTime = 0.0;
-    stats.toiMaxTime = 0.0;
+    stats.toi.toiCalls = 0;
+    stats.toi.toiIters = 0;
+    stats.toi.toiRootIters = 0;
+    stats.toi.toiMaxRootIters = 0;
+    stats.toi.toiTime = 0.0;
+    stats.toi.toiMaxTime = 0.0;
 
     bullet.setTransform(Vec2(0.0, 20.0), 0.0);
     angularVelocity = pl.Math.random(-50.0, 50.0);
@@ -81,7 +84,10 @@ planck.testbed('ContinuousTest', function(testbed) {
 
   var stepCount = 0;
   testbed.step = function() {
-    testbed.status(stats);
+    testbed.status({
+      ...stats.gjk,
+      ...stats.toi,
+    });
 
     if (stats.gjkCalls > 0) {
       // "gjk calls = %d, ave gjk iters = %3.1, max gjk iters = %d", stats.gjkCalls, stats.gjkIters / float32(stats.gjkCalls), stats.gjkMaxIters

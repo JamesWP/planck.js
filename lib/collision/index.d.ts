@@ -1,5 +1,15 @@
 import { Vec2 } from "../common";
-import { Shape } from "../shape";
+import { Shape } from "./Shape";
+
+export {
+  Shape,
+  CircleShape as Circle,
+  BoxShape as Box,
+  EdgeShape as Edge,
+  PolygonShape as Polygon,
+  ChainShape as Chain,
+} from "./collision/Shape";
+
 
 export class BroadPhase {
   // TODO
